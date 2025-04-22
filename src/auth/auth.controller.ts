@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { AuthResponse, PayloadToken } from 'src/type';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
-import { AuthGuard } from 'src/user/guards/auth.guard';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
 
 @Controller('auth')
 export class AuthController {

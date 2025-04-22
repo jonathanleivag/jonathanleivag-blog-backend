@@ -6,10 +6,12 @@ import { UserModule } from './user/user.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
 import configuration from './config/configuration';
+import { JwtModule } from './common/jwt/jwt.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
+      isGlobal: true,
       load: [configuration],
     }),
     MongooseModule.forRootAsync({
@@ -21,6 +23,7 @@ import configuration from './config/configuration';
     }),
     UserModule,
     AuthModule,
+    JwtModule,
   ],
   controllers: [AppController],
   providers: [AppService],
