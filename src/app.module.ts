@@ -7,6 +7,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
 import configuration from './config/configuration';
 import { JwtModule } from './common/jwt/jwt.module';
+import { CategoryModule } from './category/category.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { JwtModule } from './common/jwt/jwt.module';
     UserModule,
     AuthModule,
     JwtModule,
+    CategoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
