@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import configuration from './config/configuration';
 import { JwtModule } from './common/jwt/jwt.module';
 import { CategoryModule } from './category/category.module';
+import { BlogModule } from './blog/blog.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { CategoryModule } from './category/category.module';
     AuthModule,
     JwtModule,
     CategoryModule,
+    BlogModule,
   ],
   controllers: [AppController],
   providers: [AppService],
