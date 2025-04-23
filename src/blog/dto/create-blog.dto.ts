@@ -7,6 +7,7 @@ import {
   IsNumber,
   Min,
   IsMongoId,
+  IsUrl,
 } from 'class-validator';
 
 export class CreateBlogDto {
@@ -22,7 +23,7 @@ export class CreateBlogDto {
   @IsNotEmpty({ message: 'Description is required' })
   description: string;
 
-  @IsString({ message: 'Image must be a valid URL' })
+  @IsUrl({}, { message: 'Image must be a valid URL' })
   @IsNotEmpty({ message: 'Image is required' })
   image: string;
 
