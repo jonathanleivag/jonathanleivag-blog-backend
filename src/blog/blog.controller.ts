@@ -38,10 +38,22 @@ export class BlogController {
     @Query('page') page: number = 1,
     @Query('limit') limit: number = 10,
     @Query('search') search: string = '',
-    @Query('published') published?: boolean,
-    @Query('popular') popular?: boolean,
+    @Query('published') published?: string,
+    @Query('popular') popular?: string,
   ) {
-    return this.blogService.findAll(page, limit, search, published, popular);
+    const isPublished =
+      published === 'true' ? true : published === 'false' ? false : undefined;
+
+    const isPopular =
+      popular === 'true' ? true : popular === 'false' ? false : undefined;
+
+    return this.blogService.findAll(
+      page,
+      limit,
+      search,
+      isPublished,
+      isPopular,
+    );
   }
 
   @Get(':id')
