@@ -35,7 +35,9 @@ export class UserService {
   }
 
   async findAll(): Promise<UserDocumentWithoutPassword[]> {
-    return await this.userModel.find().select('-password');
+    return (await this.userModel
+      .find()
+      .select('-password')) as UserDocumentWithoutPassword[];
   }
 
   async findOne(id: string): Promise<UserDocumentWithoutPassword> {

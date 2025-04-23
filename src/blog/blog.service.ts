@@ -41,8 +41,45 @@ export class BlogService {
       .populate('user category')) as BlogDocument;
   }
 
-  async findAll(): Promise<BlogDocument[]> {
-    return await this.blogModel.find().populate('user category');
+  async findAll(
+    page: number,
+    limit: number,
+    search: string,
+    published?: boolean,
+    popular?: boolean,
+  ) {
+    const baseQuery = search
+      ? {
+          $or: [
+            { title: { $regex: search, $options: 'i' } },
+            { content: { $regex: search, $options: 'i' } },
+            { description: { $regex: search, $options: 'i' } },
+            { tags: { $in: [new RegExp(search, 'i')] } },
+          ],
+        }
+      : {};
+
+    const filters = {
+      ...baseQuery,
+      ...(typeof published === 'boolean' && { published }),
+      ...(typeof popular === 'boolean' && { popular }),
+    };
+
+    const blogs = await this.blogModel
+      .find(filters)
+      .populate('user category')
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .sort({ createdAt: -1 });
+
+    const total = await this.blogModel.countDocuments(filters);
+
+    return {
+      data: blogs,
+      total,
+      page,
+      lastPage: Math.ceil(total / limit),
+    };
   }
 
   async findOne(id: string): Promise<BlogDocument> {

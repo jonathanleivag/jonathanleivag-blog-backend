@@ -7,6 +7,7 @@ import {
   Param,
   UseGuards,
   Req,
+  Query,
 } from '@nestjs/common';
 import { BlogService } from './blog.service';
 import { CreateBlogDto } from './dto/create-blog.dto';
@@ -33,8 +34,14 @@ export class BlogController {
   }
 
   @Get()
-  findAll(): Promise<BlogDocument[]> {
-    return this.blogService.findAll();
+  findAll(
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+    @Query('search') search: string = '',
+    @Query('published') published?: boolean,
+    @Query('popular') popular?: boolean,
+  ) {
+    return this.blogService.findAll(page, limit, search, published, popular);
   }
 
   @Get(':id')
