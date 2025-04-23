@@ -17,6 +17,7 @@ import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { Roles } from 'src/enum';
 import { Role } from 'src/auth/decorators/roles.decorator';
 import { Request } from 'express';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('blog')
 export class BlogController {
@@ -25,6 +26,7 @@ export class BlogController {
   @Post()
   @UseGuards(AuthGuard)
   @Role(Roles.ADMIN)
+  @ApiBearerAuth('bearer')
   create(
     @Body() createBlogDto: CreateBlogDto,
     @Req() req: Request,
@@ -64,6 +66,7 @@ export class BlogController {
   @Patch(':id')
   @UseGuards(AuthGuard)
   @Role(Roles.ADMIN)
+  @ApiBearerAuth('bearer')
   update(
     @Param('id') id: string,
     @Body() updateBlogDto: UpdateBlogDto,

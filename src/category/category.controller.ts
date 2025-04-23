@@ -15,6 +15,7 @@ import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { Role } from 'src/auth/decorators/roles.decorator';
 import { Roles } from 'src/enum';
 import { CategoryDocument } from './schema/category.schema';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('category')
 export class CategoryController {
@@ -23,6 +24,7 @@ export class CategoryController {
   @Post()
   @UseGuards(AuthGuard)
   @Role(Roles.ADMIN)
+  @ApiBearerAuth('bearer')
   create(@Body() createCategoryDto: CreateCategoryDto) {
     return this.categoryService.create(createCategoryDto);
   }
@@ -40,6 +42,7 @@ export class CategoryController {
   @Patch(':id')
   @UseGuards(AuthGuard)
   @Role(Roles.ADMIN)
+  @ApiBearerAuth('bearer')
   update(
     @Param('id') id: string,
     @Body() updateCategoryDto: UpdateCategoryDto,
