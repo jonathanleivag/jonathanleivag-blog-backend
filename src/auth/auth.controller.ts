@@ -4,12 +4,13 @@ import { LoginAuthDto } from './dto/login-auth.dto';
 import { AuthResponse, PayloadToken } from 'src/type';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Get('login')
+  @Post('login')
   async login(@Body() loginAuthDto: LoginAuthDto): Promise<AuthResponse> {
     return this.authService.login(loginAuthDto);
   }
@@ -21,6 +22,7 @@ export class AuthController {
 
   @Get('revalidate')
   @UseGuards(AuthGuard)
+  @ApiBearerAuth('bearer')
   async AuthGuard(@Req() req: Request): Promise<string> {
     return this.authService.revalidateUser(req['user'] as PayloadToken);
   }
