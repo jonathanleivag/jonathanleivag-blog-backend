@@ -36,6 +36,10 @@ export class BlogService {
     });
     await newBlog.save();
 
+    await this.categoryService.update(category._id, {
+      blogs: [...category.blogs, newBlog],
+    });
+
     return (await this.blogModel
       .findById(newBlog._id)
       .populate('user category')) as BlogDocument;

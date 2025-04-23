@@ -56,4 +56,23 @@ export class CategoryService {
       new: true,
     })) as CategoryDocument;
   }
+
+  async categoryByBlogs(
+    published?: boolean,
+    popular?: boolean,
+  ): Promise<CategoryDocument[]> {
+    const filters = {
+      ...(typeof published === 'boolean' && { published }),
+      ...(typeof popular === 'boolean' && { popular }),
+    };
+
+    return await this.categoryModel.find().populate({
+      path: 'blogs',
+      match: filters,
+      populate: {
+        path: 'user',
+        select: '-password',
+      },
+    });
+  }
 }
