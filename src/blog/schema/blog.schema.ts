@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
 import { Category } from 'src/category/schema/category.schema';
 import { User } from 'src/user/schemas/user.schema';
+import * as mongoosePaginate from 'mongoose-paginate-v2';
 
 export type BlogDocument = HydratedDocument<Blog>;
 
@@ -47,4 +48,6 @@ export class Blog {
   category: Category;
 }
 
-export const BlogSchema = SchemaFactory.createForClass(Blog);
+const BlogSchema = SchemaFactory.createForClass(Blog);
+BlogSchema.plugin(mongoosePaginate);
+export { BlogSchema };
