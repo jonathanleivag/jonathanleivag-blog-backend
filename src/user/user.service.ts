@@ -2,14 +2,16 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { User } from './schemas/user.schema';
-import { Model } from 'mongoose';
+import { User, UserDocument } from './schemas/user.schema';
+import { FilterQuery, PaginateModel } from 'mongoose';
 import { UserDocumentWithoutPassword } from 'src/type';
 import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
+  constructor(
+    @InjectModel(User.name) private userModel: PaginateModel<UserDocument>,
+  ) {}
 
   async create(
     createUserDto: CreateUserDto,
@@ -34,10 +36,24 @@ export class UserService {
     return userSelected;
   }
 
-  async findAll(): Promise<UserDocumentWithoutPassword[]> {
-    return (await this.userModel
-      .find()
-      .select('-password')) as UserDocumentWithoutPassword[];
+  async findAll(page: number, limit: number, role?: string, search?: string) {
+    const options = {
+      page,
+      limit,
+      select: '-password',
+    };
+
+    const query: FilterQuery<User> = {};
+
+    if (role) {
+      query.role = role;
+    }
+
+    if (search) {
+      query.$or = [{ name: { $regex: search, $options: 'i' } }];
+    }
+
+    return await this.userModel.paginate(query, options);
   }
 
   async findOne(id: string): Promise<UserDocumentWithoutPassword> {

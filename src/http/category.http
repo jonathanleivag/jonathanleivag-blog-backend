@@ -1,0 +1,7 @@
+GET {{url}}/category/find/blogs
+Content-Type: application/json
+
+### GET http://localhost:3000/
+GET {{url}}/category/find/blogs?page=1&limit=5&published=true&popular=false&isActive=true&search=react
+Content-Type: application/json
+

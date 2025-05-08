@@ -1,3 +1,4 @@
+import * as mongoosePaginate from 'mongoose-paginate-v2';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
 import { Blog } from 'src/blog/schema/blog.schema';
@@ -26,5 +27,5 @@ export class Category {
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Blog' }] })
   blogs: Blog[];
 }
-
 export const CategorySchema = SchemaFactory.createForClass(Category);
+CategorySchema.plugin(mongoosePaginate);

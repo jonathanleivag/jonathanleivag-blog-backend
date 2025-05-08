@@ -1,13 +1,13 @@
 import {
+  Body,
   Controller,
   Get,
-  Post,
-  Body,
-  Patch,
   Param,
-  UseGuards,
-  Req,
+  Patch,
+  Post,
   Query,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import { BlogService } from './blog.service';
 import { CreateBlogDto } from './dto/create-blog.dto';
@@ -61,6 +61,11 @@ export class BlogController {
   @Get(':id')
   findOne(@Param('id') id: string): Promise<BlogDocument> {
     return this.blogService.findOne(id);
+  }
+
+  @Get('view/:slug')
+  findOneSlug(@Param('slug') slug: string): Promise<BlogDocument> {
+    return this.blogService.findOneSlug(slug);
   }
 
   @Patch(':id')

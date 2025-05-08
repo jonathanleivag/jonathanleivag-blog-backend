@@ -57,7 +57,7 @@ export class AuthService {
     };
   }
 
-  async revalidateUser(payload: PayloadToken): Promise<string> {
+  async revalidateUser(payload: PayloadToken): Promise<AuthResponse> {
     const user = await this.userService.findOne(payload.id);
 
     const payloadToken: PayloadToken = {
@@ -65,6 +65,15 @@ export class AuthService {
       role: user.role,
     };
 
-    return this.jwtService.sign(payloadToken);
+    return {
+      token: this.jwtService.sign(payloadToken),
+      user: user,
+    };
+  }
+
+  logout() {
+    return {
+      message: 'Logged out',
+    };
   }
 }

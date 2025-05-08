@@ -1,12 +1,12 @@
 import {
+  Body,
   Controller,
   Get,
-  Post,
-  Body,
-  Patch,
   Param,
-  UseGuards,
+  Patch,
+  Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -16,6 +16,7 @@ import { Role } from 'src/auth/decorators/roles.decorator';
 import { Roles } from 'src/enum';
 import { CategoryDocument } from './schema/category.schema';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import normalizeSearch from '../utils/normalizeSearch.util';
 
 @Controller('category')
 export class CategoryController {
@@ -54,13 +55,29 @@ export class CategoryController {
   categoryByBlogs(
     @Query('published') published?: string,
     @Query('popular') popular?: string,
-  ): Promise<CategoryDocument[]> {
+    @Query('page') page = '1',
+    @Query('limit') limit = '5',
+    @Query('search') search?: string,
+    @Query('isActive') isActive?: string,
+  ): Promise<any> {
     const isPublished =
       published === 'true' ? true : published === 'false' ? false : undefined;
 
     const isPopular =
       popular === 'true' ? true : popular === 'false' ? false : undefined;
 
-    return this.categoryService.categoryByBlogs(isPublished, isPopular);
+    const isActiveBoolean =
+      isActive === 'true' ? true : isActive === 'false' ? false : undefined;
+
+    const isSearch = normalizeSearch(search);
+
+    return this.categoryService.categoryByBlogs(
+      isPublished,
+      isPopular,
+      parseInt(page),
+      parseInt(limit),
+      isSearch,
+      isActiveBoolean,
+    );
   }
 }

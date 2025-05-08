@@ -1,12 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsString,
-  MinLength,
-  IsNotEmpty,
-  IsEmail,
-  IsPhoneNumber,
   IsBoolean,
+  IsEmail,
+  IsNotEmpty,
   IsOptional,
+  IsString,
+  Matches,
+  MinLength,
 } from 'class-validator';
 import { Roles } from 'src/enum';
 
@@ -52,7 +52,9 @@ export class CreateUserDto {
     description: 'Phone of the user',
     example: '+56912345678',
   })
-  @IsPhoneNumber('CH', { message: 'Phone must be a valid phone number' })
+  @Matches(/^(\+56)(9\d{8})$/, {
+    message: 'Phone must be a valid Chilean mobile number',
+  })
   phone: string;
 
   @ApiProperty({
@@ -72,10 +74,6 @@ export class CreateUserDto {
   @IsOptional()
   isActive?: boolean;
 
-  @ApiProperty({
-    description: 'IsVerified of the user',
-    example: true,
-  })
   @IsBoolean({ message: 'IsVerified must be a boolean' })
   @IsOptional()
   deletedAt?: Date;

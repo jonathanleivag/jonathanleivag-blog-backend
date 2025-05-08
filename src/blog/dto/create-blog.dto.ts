@@ -1,14 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsString,
-  IsNotEmpty,
-  IsBoolean,
-  IsOptional,
   IsArray,
-  IsNumber,
-  Min,
+  IsBoolean,
   IsMongoId,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
   IsUrl,
+  Min,
 } from 'class-validator';
 
 export class CreateBlogDto {
@@ -103,7 +103,7 @@ export class CreateBlogDto {
     example: '68087769fd85a80341553840',
   })
   @IsMongoId({ message: 'User ID must be a valid MongoID' })
-  @IsNotEmpty({ message: 'User is required' })
+  @IsOptional()
   user: string;
 
   @ApiProperty({

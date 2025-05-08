@@ -11,3 +11,5 @@ export interface AuthResponse {
   token: string;
   user: UserDocumentWithoutPassword;
 }
+
+export type SAMESITE = boolean | 'lax' | 'strict' | 'none' | undefined;

@@ -1,10 +1,13 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
+  Controller,
+  DefaultValuePipe,
+  Get,
   Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
@@ -28,8 +31,13 @@ export class UserController {
   }
 
   @Get()
-  findAll() {
-    return this.userService.findAll();
+  async findAll(
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(5), ParseIntPipe) limit: number,
+    @Query('role') role?: string,
+    @Query('search') search?: string,
+  ) {
+    return this.userService.findAll(page, limit, role, search);
   }
 
   @Get(':id')

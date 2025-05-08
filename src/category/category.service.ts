@@ -3,12 +3,13 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Category, CategoryDocument } from './schema/category.schema';
-import { Model } from 'mongoose';
+import { PaginateModel } from 'mongoose';
 
 @Injectable()
 export class CategoryService {
   constructor(
-    @InjectModel(Category.name) private categoryModel: Model<Category>,
+    @InjectModel(Category.name)
+    private categoryModel: PaginateModel<CategoryDocument>,
   ) {}
 
   async create(
@@ -33,7 +34,7 @@ export class CategoryService {
   }
 
   async findOne(id: string): Promise<CategoryDocument> {
-    const category = await this.categoryModel.findById(id);
+    const category = await this.categoryModel.findById(id).populate('blogs');
 
     if (!category) {
       throw new HttpException('Category not found', HttpStatus.NOT_FOUND);
@@ -60,18 +61,31 @@ export class CategoryService {
   async categoryByBlogs(
     published?: boolean,
     popular?: boolean,
-  ): Promise<CategoryDocument[]> {
+    page = 1,
+    limit = 10,
+    search?: string,
+    isActive?: boolean,
+  ): Promise<any> {
     const filters = {
       ...(typeof published === 'boolean' && { published }),
       ...(typeof popular === 'boolean' && { popular }),
     };
 
-    return await this.categoryModel.find().populate({
-      path: 'blogs',
-      match: filters,
+    const query: any = {
+      ...(typeof isActive === 'boolean' && { isActive }),
+      ...(search ? { name: { $regex: search, $options: 'i' } } : {}),
+    };
+
+    return await this.categoryModel.paginate(query, {
+      page,
+      limit,
       populate: {
-        path: 'user',
-        select: '-password',
+        path: 'blogs',
+        match: filters,
+        populate: {
+          path: 'user',
+          select: '-password',
+        },
       },
     });
   }

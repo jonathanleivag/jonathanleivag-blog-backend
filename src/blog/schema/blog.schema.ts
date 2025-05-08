@@ -11,6 +11,7 @@ export type BlogDocument = HydratedDocument<Blog>;
   versionKey: false,
 })
 export class Blog {
+  _id: string;
   @Prop({ required: true, trim: true, unique: true })
   title: string;
 
@@ -26,7 +27,7 @@ export class Blog {
   @Prop({ default: false })
   published: boolean;
 
-  @Prop({ required: true })
+  @Prop({ required: true, unique: true })
   slug: string;
 
   @Prop({ default: [] })
