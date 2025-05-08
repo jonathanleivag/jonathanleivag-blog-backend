@@ -13,3 +13,27 @@ export interface AuthResponse {
 }
 
 export type SAMESITE = boolean | 'lax' | 'strict' | 'none' | undefined;
+
+export type Trend = '↑ aumento' | '↓ disminución' | '→ estable';
+
+export interface Tendencies {
+  trend: Trend;
+  percentage: number;
+}
+
+export interface DashboardResponse {
+  totalBlogs: number;
+  totalBlogsPublished: number;
+  totalBlogsDraft: number;
+  totalCategories: number;
+  totalCategoriesPublished: number;
+  totalCategoriesDraft: number;
+  totalUsers: number;
+  totalUserAdmin: number;
+  totalUserUser: number;
+  views: string;
+  averageReadings: number;
+  averageTime: number;
+  featuredBlog: number;
+  tendencies: Tendencies;
+}

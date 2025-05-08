@@ -9,6 +9,7 @@ import configuration from './config/configuration';
 import { JwtModule } from './common/jwt/jwt.module';
 import { CategoryModule } from './category/category.module';
 import { BlogModule } from './blog/blog.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { BlogModule } from './blog/blog.module';
     JwtModule,
     CategoryModule,
     BlogModule,
+    DashboardModule,
   ],
   controllers: [AppController],
   providers: [AppService],

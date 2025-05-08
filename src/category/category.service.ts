@@ -4,6 +4,7 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Category, CategoryDocument } from './schema/category.schema';
 import { PaginateModel } from 'mongoose';
+import { Blog } from '../blog/schema/blog.schema';
 
 @Injectable()
 export class CategoryService {
@@ -88,5 +89,16 @@ export class CategoryService {
         },
       },
     });
+  }
+
+  async getTotalCategory(published?: boolean): Promise<number> {
+    let categories: Blog[];
+
+    if (published) {
+      categories = await this.categoryModel.find({ published });
+    } else {
+      categories = await this.categoryModel.find();
+    }
+    return categories.length;
   }
 }
