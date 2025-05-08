@@ -6,6 +6,7 @@ import { User, UserDocument } from './schemas/user.schema';
 import { FilterQuery, PaginateModel } from 'mongoose';
 import { UserDocumentWithoutPassword } from 'src/type';
 import * as bcrypt from 'bcryptjs';
+import { Roles } from 'src/enum';
 
 @Injectable()
 export class UserService {
@@ -88,5 +89,15 @@ export class UserService {
       .select('-password')) as UserDocumentWithoutPassword;
 
     return userUpdate;
+  }
+
+  async totalUsers(role?: Roles): Promise<number> {
+    let users: User[];
+    if (role) {
+      users = await this.userModel.find();
+    } else {
+      users = await this.userModel.find({ role });
+    }
+    return users.length;
   }
 }

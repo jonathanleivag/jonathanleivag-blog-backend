@@ -47,6 +47,9 @@ export class Blog {
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Category.name })
   category: Category;
+
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 const BlogSchema = SchemaFactory.createForClass(Blog);

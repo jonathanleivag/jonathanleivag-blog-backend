@@ -6,6 +6,8 @@ import { PaginateModel } from 'mongoose';
 import { Blog, BlogDocument } from './schema/blog.schema';
 import { UserService } from 'src/user/user.service';
 import { CategoryService } from 'src/category/category.service';
+import { Tendencies } from '../type';
+import formatMinutesToHours from '../utils/formatMinutesToHours.util';
 
 @Injectable()
 export class BlogService {
@@ -162,5 +164,85 @@ export class BlogService {
       throw new HttpException('Blog not found', HttpStatus.NOT_FOUND);
     }
     return blog;
+  }
+
+  async getAverageReadingTime(): Promise<number> {
+    const blogs = await this.blogModel.find({
+      published: true,
+      views: { $gt: 0 },
+    });
+    if (blogs.length === 0) return 0;
+    const totalReadingTime = blogs.reduce(
+      (sum, blog) => sum + blog.readingTime,
+      0,
+    );
+    return totalReadingTime / blogs.length;
+  }
+
+  async getAverageTime(): Promise<number> {
+    const blogs = await this.blogModel.find({
+      published: true,
+    });
+    if (blogs.length === 0) return 0;
+    const totalReadingTime = blogs.reduce(
+      (sum, blog) => sum + blog.readingTime,
+      0,
+    );
+    return totalReadingTime / blogs.length;
+  }
+
+  async getFeaturedBlog(): Promise<number> {
+    const blogs = await this.blogModel.find({
+      published: true,
+      popular: true,
+    });
+    return blogs.length;
+  }
+
+  async getTendencies(): Promise<Tendencies> {
+    const blogs = await this.blogModel.find({
+      published: true,
+      views: { $gt: 0 },
+    });
+    if (blogs.length < 2) return { trend: '→ estable', percentage: 0 };
+    const sorted = [...blogs].sort(
+      (a, b) =>
+        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+    );
+
+    const firstHalf = sorted.slice(0, Math.floor(sorted.length / 2));
+    const secondHalf = sorted.slice(Math.floor(sorted.length / 2));
+
+    const avgFirst =
+      firstHalf.reduce((sum, b) => sum + b.views, 0) / firstHalf.length;
+    const avgSecond =
+      secondHalf.reduce((sum, b) => sum + b.views, 0) / secondHalf.length;
+
+    const percentage =
+      avgFirst === 0 ? 0 : ((avgSecond - avgFirst) / avgFirst) * 100;
+
+    if (percentage > 5) return { trend: '↑ aumento', percentage };
+    if (percentage < -5) return { trend: '↓ disminución', percentage };
+    return { trend: '→ estable', percentage };
+  }
+
+  async getTotalBlog(published?: boolean): Promise<number> {
+    let blogs: Blog[];
+
+    if (published) {
+      blogs = await this.blogModel.find({ published });
+    } else {
+      blogs = await this.blogModel.find();
+    }
+    return blogs.length;
+  }
+
+  async getTotalViewTimeInMinutes(): Promise<string> {
+    const blogs = await this.blogModel.find({
+      published: true,
+    });
+    return formatMinutesToHours(
+      blogs.reduce((total, blog) => total + blog.views * blog.readingTime, 0),
+    );
   }
 }
