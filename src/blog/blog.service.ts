@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  forwardRef,
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import { CreateBlogDto } from './dto/create-blog.dto';
 import { UpdateBlogDto } from './dto/update-blog.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -8,6 +14,7 @@ import { UserService } from 'src/user/user.service';
 import { CategoryService } from 'src/category/category.service';
 import { Tendencies } from '../type';
 import formatMinutesToHours from '../utils/formatMinutesToHours.util';
+import { AuditLogService } from '../audit-log/audit-log.service';
 
 @Injectable()
 export class BlogService {
@@ -16,6 +23,8 @@ export class BlogService {
     private readonly blogModel: PaginateModel<BlogDocument>,
     private readonly userService: UserService,
     private readonly categoryService: CategoryService,
+    @Inject(forwardRef(() => AuditLogService))
+    private readonly auditLogService: AuditLogService,
   ) {}
 
   async create(
@@ -57,6 +66,13 @@ export class BlogService {
       blogs: [...category.blogs, newBlog],
     });
 
+    await this.auditLogService.create({
+      action: `Blog created: ${newBlog.title}`,
+      userCreator: user._id,
+      entityType: 'BLOG',
+      idAction: newBlog._id,
+    });
+
     return (await this.blogModel
       .findById(newBlog._id)
       .populate('user category')) as BlogDocument;
@@ -94,9 +110,7 @@ export class BlogService {
       lean: true,
     };
 
-    const result = await this.blogModel.paginate(filters, options);
-
-    return result;
+    return await this.blogModel.paginate(filters, options);
   }
 
   async findOne(id: string): Promise<BlogDocument> {
@@ -150,9 +164,18 @@ export class BlogService {
       });
     }
 
-    return (await this.blogModel
+    const newBlogUpdated = (await this.blogModel
       .findByIdAndUpdate(id, updateBlogDto, { new: true })
       .populate('user category')) as BlogDocument;
+
+    await this.auditLogService.create({
+      action: `Blog updated: ${newBlogUpdated.title}`,
+      userCreator: newBlogUpdated.user._id,
+      entityType: 'BLOG',
+      idAction: newBlogUpdated._id,
+    });
+
+    return newBlogUpdated;
   }
 
   async findOneSlug(slug: string): Promise<BlogDocument> {

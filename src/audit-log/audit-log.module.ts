@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { AuditLogService } from './audit-log.service';
 import { AuditLogController } from './audit-log.controller';
 import { AuditLog, AuditLogSchema } from './schema/audit-log.schema';
@@ -14,7 +14,7 @@ import { BlogModule } from '../blog/blog.module';
     ]),
     UserModule,
     CategoryModule,
-    BlogModule,
+    forwardRef(() => BlogModule),
   ],
   controllers: [AuditLogController],
   providers: [AuditLogService],
