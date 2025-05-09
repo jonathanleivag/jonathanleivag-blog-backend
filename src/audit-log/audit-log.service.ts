@@ -55,7 +55,15 @@ export class AuditLogService {
     return await newAuditLog.save();
   }
 
-  findAll() {
-    return `This action returns all auditLog`;
+  async findAll(page: number, limit: number) {
+    const options = {
+      page,
+      limit,
+      sort: { createdAt: -1 },
+      populate: ['userCreator', 'blog', 'category', 'user'],
+      lean: true,
+    };
+
+    return await this.auditLogModel.paginate({}, options);
   }
 }
