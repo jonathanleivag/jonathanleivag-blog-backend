@@ -13,7 +13,7 @@ import { BlogModule } from '../blog/blog.module';
       { name: AuditLog.name, schema: AuditLogSchema },
     ]),
     UserModule,
-    CategoryModule,
+    forwardRef(() => CategoryModule),
     forwardRef(() => BlogModule),
   ],
   controllers: [AuditLogController],

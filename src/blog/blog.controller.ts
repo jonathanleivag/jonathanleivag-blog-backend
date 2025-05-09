@@ -18,6 +18,7 @@ import { Roles } from 'src/enum';
 import { Role } from 'src/auth/decorators/roles.decorator';
 import { Request } from 'express';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { User } from '../auth/decorators/user.decorator';
 
 @Controller('blog')
 export class BlogController {
@@ -75,7 +76,8 @@ export class BlogController {
   update(
     @Param('id') id: string,
     @Body() updateBlogDto: UpdateBlogDto,
+    @User('id') userId: string,
   ): Promise<BlogDocument> {
-    return this.blogService.update(id, updateBlogDto);
+    return this.blogService.update(id, updateBlogDto, userId);
   }
 }
