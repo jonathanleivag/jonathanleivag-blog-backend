@@ -11,7 +11,7 @@ import { AuditLogModule } from '../audit-log/audit-log.module';
   imports: [
     MongooseModule.forFeature([{ name: Blog.name, schema: BlogSchema }]),
     CategoryModule,
-    UserModule,
+    forwardRef(() => UserModule),
     forwardRef(() => AuditLogModule),
   ],
   controllers: [BlogController],

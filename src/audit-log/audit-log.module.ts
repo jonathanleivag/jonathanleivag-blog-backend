@@ -12,7 +12,7 @@ import { BlogModule } from '../blog/blog.module';
     MongooseModule.forFeature([
       { name: AuditLog.name, schema: AuditLogSchema },
     ]),
-    UserModule,
+    forwardRef(() => UserModule),
     forwardRef(() => CategoryModule),
     forwardRef(() => BlogModule),
   ],

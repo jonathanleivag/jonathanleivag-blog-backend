@@ -21,6 +21,7 @@ export class BlogService {
   constructor(
     @InjectModel(Blog.name)
     private readonly blogModel: PaginateModel<BlogDocument>,
+    @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
     private readonly categoryService: CategoryService,
     @Inject(forwardRef(() => AuditLogService))

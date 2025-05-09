@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { CreateAuditLogDto } from './dto/create-audit-log.dto';
 import { PaginateModel } from 'mongoose';
 import { AuditLog, AuditLogDocument } from './schema/audit-log.schema';
@@ -15,6 +15,7 @@ export class AuditLogService {
   constructor(
     @InjectModel(AuditLog.name)
     private readonly auditLogModel: PaginateModel<AuditLogDocument>,
+    @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
     private readonly categoryService: CategoryService,
     private readonly blogService: BlogService,

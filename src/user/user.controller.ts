@@ -17,6 +17,7 @@ import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { Role } from 'src/auth/decorators/roles.decorator';
 import { Roles } from 'src/enum';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { User } from 'src/auth/decorators/user.decorator';
 
 @UseGuards(AuthGuard)
 @Role(Roles.ADMIN)
@@ -26,8 +27,8 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+  create(@Body() createUserDto: CreateUserDto, @User('id') userId: string) {
+    return this.userService.create(createUserDto, userId);
   }
 
   @Get()
