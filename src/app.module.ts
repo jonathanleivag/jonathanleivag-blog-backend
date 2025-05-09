@@ -10,6 +10,7 @@ import { JwtModule } from './common/jwt/jwt.module';
 import { CategoryModule } from './category/category.module';
 import { BlogModule } from './blog/blog.module';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { AuditLogModule } from './audit-log/audit-log.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { DashboardModule } from './dashboard/dashboard.module';
     CategoryModule,
     BlogModule,
     DashboardModule,
+    AuditLogModule,
   ],
   controllers: [AppController],
   providers: [AppService],

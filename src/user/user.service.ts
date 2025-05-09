@@ -1,21 +1,31 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  forwardRef,
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './schemas/user.schema';
 import { FilterQuery, PaginateModel } from 'mongoose';
-import { UserDocumentWithoutPassword } from 'src/type';
+import { EntityType, UserDocumentWithoutPassword } from 'src/type';
 import * as bcrypt from 'bcryptjs';
 import { Roles } from 'src/enum';
+import { AuditLogService } from '../audit-log/audit-log.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(User.name) private userModel: PaginateModel<UserDocument>,
+    @Inject(forwardRef(() => AuditLogService))
+    private readonly auditLogService: AuditLogService,
   ) {}
 
   async create(
     createUserDto: CreateUserDto,
+    userId?: string,
   ): Promise<UserDocumentWithoutPassword> {
     const user = await this.userModel.findOne({ email: createUserDto.email });
     if (user) {
@@ -33,6 +43,15 @@ export class UserService {
     const userSelected = (await this.userModel
       .findOne({ email: createUserDto.email })
       .select('-password')) as UserDocumentWithoutPassword;
+
+    if (userId) {
+      await this.auditLogService.create({
+        action: `User created: ${newUser.name}`,
+        userCreator: userId,
+        entityType: userSelected.role.toUpperCase() as EntityType,
+        idAction: userSelected._id,
+      });
+    }
 
     return userSelected;
   }
@@ -87,6 +106,13 @@ export class UserService {
     const userUpdate = (await this.userModel
       .findByIdAndUpdate(id, updateUserDto, { new: true })
       .select('-password')) as UserDocumentWithoutPassword;
+
+    await this.auditLogService.create({
+      action: `User updated: ${userUpdate.name}`,
+      userCreator: userUpdate._id,
+      entityType: userUpdate.role.toUpperCase() as EntityType,
+      idAction: userUpdate._id,
+    });
 
     return userUpdate;
   }

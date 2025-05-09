@@ -1,0 +1,3 @@
+GET {{url}}/audit-log
+Content-Type: application/json
+Authorization: Bearer {{token}}

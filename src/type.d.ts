@@ -37,3 +37,5 @@ export interface DashboardResponse {
   featuredBlog: number;
   tendencies: Tendencies;
 }
+
+export type EntityType = 'CATEGORY' | 'BLOG' | 'USER';

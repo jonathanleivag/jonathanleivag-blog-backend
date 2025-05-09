@@ -1,20 +1,30 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  forwardRef,
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Category, CategoryDocument } from './schema/category.schema';
 import { PaginateModel } from 'mongoose';
 import { Blog } from '../blog/schema/blog.schema';
+import { AuditLogService } from 'src/audit-log/audit-log.service';
 
 @Injectable()
 export class CategoryService {
   constructor(
     @InjectModel(Category.name)
     private categoryModel: PaginateModel<CategoryDocument>,
+    @Inject(forwardRef(() => AuditLogService))
+    private readonly auditLogService: AuditLogService,
   ) {}
 
   async create(
     createCategoryDto: CreateCategoryDto,
+    userId: string,
   ): Promise<CategoryDocument> {
     const category = await this.categoryModel.findOne({
       name: createCategoryDto.name,
@@ -27,7 +37,16 @@ export class CategoryService {
       );
     }
     const newCategory = new this.categoryModel(createCategoryDto);
-    return newCategory.save();
+    const categorySave = await newCategory.save();
+
+    await this.auditLogService.create({
+      action: `Category created: ${newCategory.name}`,
+      userCreator: userId,
+      entityType: 'CATEGORY',
+      idAction: categorySave._id,
+    });
+
+    return categorySave;
   }
 
   async findAll(): Promise<CategoryDocument[]> {
@@ -47,6 +66,7 @@ export class CategoryService {
   async update(
     id: string,
     updateCategoryDto: UpdateCategoryDto,
+    userId: string,
   ): Promise<CategoryDocument> {
     const category = await this.categoryModel.findById(id);
 
@@ -54,9 +74,22 @@ export class CategoryService {
       throw new HttpException('Category not found', HttpStatus.NOT_FOUND);
     }
 
-    return (await this.categoryModel.findByIdAndUpdate(id, updateCategoryDto, {
-      new: true,
-    })) as CategoryDocument;
+    const updatedCategory = (await this.categoryModel.findByIdAndUpdate(
+      id,
+      updateCategoryDto,
+      {
+        new: true,
+      },
+    )) as CategoryDocument;
+
+    await this.auditLogService.create({
+      action: `Category updated: ${updatedCategory.name}`,
+      userCreator: userId,
+      entityType: 'CATEGORY',
+      idAction: updatedCategory._id,
+    });
+
+    return updatedCategory;
   }
 
   async categoryByBlogs(

@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import {
   AuthResponse,
+  EntityType,
   PayloadToken,
   UserDocumentWithoutPassword,
 } from 'src/type';
@@ -11,12 +12,14 @@ import { JwtService } from '@nestjs/jwt';
 import { UserDocument } from 'src/user/schemas/user.schema';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { Roles } from 'src/enum';
+import { AuditLogService } from 'src/audit-log/audit-log.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
+    private readonly auditLogService: AuditLogService,
   ) {}
 
   async login(loginAuthDto: LoginAuthDto): Promise<AuthResponse> {
@@ -31,6 +34,13 @@ export class AuthService {
     const { password, ...userWithoutPassword } = (
       user as UserDocument
     ).toObject();
+
+    await this.auditLogService.create({
+      action: 'User logged in successfully',
+      userCreator: user._id,
+      entityType: user.role.toUpperCase() as EntityType,
+      idAction: user._id,
+    });
 
     const payload: PayloadToken = {
       id: user._id,
@@ -50,6 +60,13 @@ export class AuthService {
       id: user._id,
       role: user.role,
     };
+
+    await this.auditLogService.create({
+      action: `New user registered successfully with role: ${user.role}`,
+      userCreator: user._id,
+      entityType: 'USER',
+      idAction: user._id,
+    });
 
     return {
       token: this.jwtService.sign(payload),

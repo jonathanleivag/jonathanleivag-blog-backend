@@ -17,6 +17,7 @@ import { Roles } from 'src/enum';
 import { CategoryDocument } from './schema/category.schema';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import normalizeSearch from '../utils/normalizeSearch.util';
+import { User } from 'src/auth/decorators/user.decorator';
 
 @Controller('category')
 export class CategoryController {
@@ -26,8 +27,11 @@ export class CategoryController {
   @UseGuards(AuthGuard)
   @Role(Roles.ADMIN)
   @ApiBearerAuth('bearer')
-  create(@Body() createCategoryDto: CreateCategoryDto) {
-    return this.categoryService.create(createCategoryDto);
+  create(
+    @Body() createCategoryDto: CreateCategoryDto,
+    @User('id') userId: string,
+  ) {
+    return this.categoryService.create(createCategoryDto, userId);
   }
 
   @Get()
@@ -47,8 +51,9 @@ export class CategoryController {
   update(
     @Param('id') id: string,
     @Body() updateCategoryDto: UpdateCategoryDto,
+    @User('id') userId: string,
   ) {
-    return this.categoryService.update(id, updateCategoryDto);
+    return this.categoryService.update(id, updateCategoryDto, userId);
   }
 
   @Get('find/blogs')
