@@ -19,6 +19,7 @@ export type Trend = '↑ aumento' | '↓ disminución' | '→ estable';
 export interface Tendencies {
   trend: Trend;
   percentage: number;
+  title: string;
 }
 
 export interface DashboardResponse {

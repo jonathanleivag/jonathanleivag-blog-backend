@@ -120,9 +120,9 @@ export class UserService {
   async totalUsers(role?: Roles): Promise<number> {
     let users: User[];
     if (role) {
-      users = await this.userModel.find();
-    } else {
       users = await this.userModel.find({ role });
+    } else {
+      users = await this.userModel.find();
     }
     return users.length;
   }

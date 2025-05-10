@@ -241,7 +241,22 @@ export class BlogService {
       published: true,
       views: { $gt: 0 },
     });
-    if (blogs.length < 2) return { trend: '→ estable', percentage: 0 };
+
+    const blogMostViews = await this.blogModel
+      .findOne({
+        published: true,
+        views: { $gt: 0 },
+      })
+      .sort({ views: -1 })
+      .select('title views')
+      .lean();
+
+    if (blogs.length < 2)
+      return {
+        trend: '→ estable',
+        percentage: 0,
+        title: blogMostViews?.title || '',
+      };
     const sorted = [...blogs].sort(
       (a, b) =>
         new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
@@ -258,9 +273,23 @@ export class BlogService {
     const percentage =
       avgFirst === 0 ? 0 : ((avgSecond - avgFirst) / avgFirst) * 100;
 
-    if (percentage > 5) return { trend: '↑ aumento', percentage };
-    if (percentage < -5) return { trend: '↓ disminución', percentage };
-    return { trend: '→ estable', percentage };
+    if (percentage > 5)
+      return {
+        trend: '↑ aumento',
+        percentage,
+        title: blogMostViews?.title || '',
+      };
+    if (percentage < -5)
+      return {
+        trend: '↓ disminución',
+        percentage,
+        title: blogMostViews?.title || '',
+      };
+    return {
+      trend: '→ estable',
+      percentage,
+      title: blogMostViews?.title || '',
+    };
   }
 
   async getTotalBlog(published?: boolean): Promise<number> {
