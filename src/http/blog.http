@@ -27,3 +27,6 @@ GET {{url}}/blog?page=1&limit=5&published=true&popular=false
 
 ###
 GET {{url}}/blog
+
+###
+GET {{url}}/blog?category=Desarrollo%20Web
