@@ -43,6 +43,7 @@ export class BlogController {
     @Query('search') search: string = '',
     @Query('published') published?: string,
     @Query('popular') popular?: string,
+    @Query('category') category?: string,
   ) {
     const isPublished =
       published === 'true' ? true : published === 'false' ? false : undefined;
@@ -56,6 +57,7 @@ export class BlogController {
       search,
       isPublished,
       isPopular,
+      category,
     );
   }
 

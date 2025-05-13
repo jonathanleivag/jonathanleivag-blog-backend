@@ -134,4 +134,12 @@ export class CategoryService {
     }
     return categories.length;
   }
+
+  async findOneName(name: string) {
+    const category = await this.categoryModel.findOne({ name });
+    if (!category) {
+      throw new HttpException('Category not found', HttpStatus.NOT_FOUND);
+    }
+    return category;
+  }
 }

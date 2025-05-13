@@ -89,7 +89,8 @@ export class BlogService {
     search: string,
     published?: boolean,
     popular?: boolean,
-  ) {
+    categoryName?: string,
+  ): Promise<any> {
     const baseQuery = search
       ? {
           $or: [
@@ -101,8 +102,17 @@ export class BlogService {
         }
       : {};
 
+    let categoryFilter = {};
+    if (categoryName) {
+      const category = await this.categoryService.findOneName(categoryName);
+      if (category) {
+        categoryFilter = { category: category._id };
+      }
+    }
+
     const filters = {
       ...baseQuery,
+      ...categoryFilter,
       ...(typeof published === 'boolean' && { published }),
       ...(typeof popular === 'boolean' && { popular }),
     };
