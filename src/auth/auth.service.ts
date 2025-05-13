@@ -1,7 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import {
   AuthResponse,
-  EntityType,
   PayloadToken,
   UserDocumentWithoutPassword,
 } from 'src/type';
@@ -38,7 +37,7 @@ export class AuthService {
     await this.auditLogService.create({
       action: 'User logged in successfully',
       userCreator: user._id,
-      entityType: user.role.toUpperCase() as EntityType,
+      entityType: 'USER',
       idAction: user._id,
     });
 

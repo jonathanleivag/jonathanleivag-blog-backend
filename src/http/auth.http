@@ -2,6 +2,26 @@ POST {{url}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "email@email.com",
+  "email": "email@email.cl",
   "password": "Jhnlisto19066."
+}
+
+###
+POST {{url}}/auth/register
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "JONATHAN",
+  "email": "EMAIL@EMAIL.CL",
+  "password": "Jhnlisto19066.",
+  "confirmPassword": "Jhnlisto19066.",
+  "phone": "+56912345678",
+  "role": "ADMIN",
+  "description": "Bienvenido a mi web, mi nombre es Jonathan Leiva, soy egresado del instituto profesional ClISA, en donde cursé la carrera Programación Computacional y la Ingeniería Computacional e Informática. Aquí sabras más de mi y misconocimientos e intereses.",
+  "location": "Chile",
+  "avatar": "https://res.cloudinary.com/dq8fpb695/image/upload/v1729452502/jonathanleivag/exuuqychlhf21s4unvj4.jpg",
+  "start": "2024-03-20T00:00:00.000Z",
+  "webSite": "https://github.com/jonathanleivag",
+  "isActive": true
 }

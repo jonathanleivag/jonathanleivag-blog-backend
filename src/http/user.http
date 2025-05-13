@@ -1,3 +1,18 @@
 GET {{url}}/user
 Content-Type: application/json
 Authorization: Bearer {{token}}
+
+###
+POST {{url}}/user/
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "JONATHAN Leiva",
+  "email": "EMAIL@EMAIL.com.commmm",
+  "password": "Jhnlisto19066.",
+  "confirmPassword": "Jhnlisto19066.",
+  "phone": "+56912345678",
+  "role": "ADMIN",
+  "isActive": true
+}
