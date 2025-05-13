@@ -48,7 +48,7 @@ export class UserService {
       await this.auditLogService.create({
         action: `User created: ${newUser.name}`,
         userCreator: userId,
-        entityType: userSelected.role.toUpperCase() as EntityType,
+        entityType: 'USER',
         idAction: userSelected._id,
       });
     }

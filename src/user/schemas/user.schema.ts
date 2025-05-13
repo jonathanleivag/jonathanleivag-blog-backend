@@ -39,6 +39,26 @@ export class User {
   })
   role: Roles;
 
+  @Prop({ type: String, trim: true, default: '' })
+  description: string;
+
+  @Prop({ type: String, trim: true, default: '' })
+  location: string;
+
+  @Prop({ type: Date, trim: true })
+  start: Date;
+
+  @Prop({ type: String, trim: true, default: '' })
+  webSite: string;
+
+  @Prop({
+    type: String,
+    trim: true,
+    default:
+      'https://res.cloudinary.com/dq8fpb695/image/upload/v1662878253/jonathanleivag/logo/ohbxjqje4kelihconfov.png',
+  })
+  avatar: string;
+
   @Prop({ default: true, type: Boolean })
   isActive: boolean;
 
