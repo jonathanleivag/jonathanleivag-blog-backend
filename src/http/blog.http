@@ -30,3 +30,7 @@ GET {{url}}/blog
 
 ###
 GET {{url}}/blog?category=Desarrollo%20Web
+
+###
+GET {{url}}/blog/count/published
+Content-Type: application/json

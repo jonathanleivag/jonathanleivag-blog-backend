@@ -1,5 +1,5 @@
-import { Roles } from './enum';
-import { UserDocument } from './user/schemas/user.schema';
+import {Roles} from './enum';
+import {UserDocument} from './user/schemas/user.schema';
 
 export type UserDocumentWithoutPassword = Omit<UserDocument, 'password'>;
 
@@ -40,3 +40,8 @@ export interface DashboardResponse {
 }
 
 export type EntityType = 'CATEGORY' | 'BLOG' | 'USER';
+
+export interface getHeroResponse {
+  blogs: number;
+  readers: number;
+}

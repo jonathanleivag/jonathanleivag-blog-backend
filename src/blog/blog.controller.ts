@@ -19,6 +19,7 @@ import { Role } from 'src/auth/decorators/roles.decorator';
 import { Request } from 'express';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { User } from '../auth/decorators/user.decorator';
+import { getHeroResponse } from '../type';
 
 @Controller('blog')
 export class BlogController {
@@ -69,6 +70,11 @@ export class BlogController {
   @Get('view/:slug')
   findOneSlug(@Param('slug') slug: string): Promise<BlogDocument> {
     return this.blogService.findOneSlug(slug);
+  }
+
+  @Get('count/published')
+  getTotalBlog(): Promise<getHeroResponse> {
+    return this.blogService.getHero();
   }
 
   @Patch(':id')

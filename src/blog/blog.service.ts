@@ -12,7 +12,7 @@ import { PaginateModel } from 'mongoose';
 import { Blog, BlogDocument } from './schema/blog.schema';
 import { UserService } from 'src/user/user.service';
 import { CategoryService } from 'src/category/category.service';
-import { Tendencies } from '../type';
+import { getHeroResponse, Tendencies } from '../type';
 import formatMinutesToHours from '../utils/formatMinutesToHours.util';
 import { AuditLogService } from '../audit-log/audit-log.service';
 
@@ -320,5 +320,17 @@ export class BlogService {
     return formatMinutesToHours(
       blogs.reduce((total, blog) => total + blog.views * blog.readingTime, 0),
     );
+  }
+
+  async getHero(): Promise<getHeroResponse> {
+    const renders = await this.blogModel.find({
+      views: { $gt: 0 },
+      published: true,
+    });
+
+    return {
+      blogs: await this.getTotalBlog(true),
+      readers: renders.length ?? 0,
+    };
   }
 }
