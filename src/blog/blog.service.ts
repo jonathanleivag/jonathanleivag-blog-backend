@@ -323,14 +323,23 @@ export class BlogService {
   }
 
   async getHero(): Promise<getHeroResponse> {
-    const renders = await this.blogModel.find({
-      views: { $gt: 0 },
-      published: true,
-    });
+    const totalViews = await this.blogModel.aggregate<{ total: number }>([
+      {
+        $match: {
+          published: true,
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: '$views' },
+        },
+      },
+    ]);
 
     return {
       blogs: await this.getTotalBlog(true),
-      readers: renders.length ?? 0,
+      readers: totalViews[0].total ?? 0,
     };
   }
 }
