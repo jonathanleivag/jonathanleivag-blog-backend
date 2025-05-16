@@ -1,0 +1,3 @@
+GET {{url}}/dashboard
+Content-Type: application/json
+Authorization: Bearer {{token}}
