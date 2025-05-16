@@ -342,4 +342,8 @@ export class BlogService {
       readers: totalViews[0].total ?? 0,
     };
   }
+
+  async getAllBlog() {
+    return this.blogModel.find({ published: true });
+  }
 }

@@ -77,6 +77,11 @@ export class BlogController {
     return this.blogService.getHero();
   }
 
+  @Get('total/blog')
+  getAlllBlog() {
+    return this.blogService.getAllBlog();
+  }
+
   @Patch(':id')
   @UseGuards(AuthGuard)
   @Role(Roles.ADMIN)
