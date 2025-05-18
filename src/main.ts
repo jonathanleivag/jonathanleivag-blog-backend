@@ -24,7 +24,7 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe());
   app.use(helmet());
-  app.use(cors({ credentials: true }));
+  app.use(cors({ origin: '*', credentials: true }));
   app.use(cookieParser());
   await app.listen(process.env.PORT ?? 3000);
 }
