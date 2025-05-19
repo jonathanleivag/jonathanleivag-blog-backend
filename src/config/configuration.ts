@@ -12,4 +12,7 @@ export default () => ({
     NODE_ENV: process.env.NODE_ENV,
     SAMESITE: process.env.SAMESITE,
   },
+  uri: {
+    URI: process.env.URL_FRONTEND,
+  },
 });
