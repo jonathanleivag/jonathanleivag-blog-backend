@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Desarrollo" type="CompoundRunConfigurationType">
+    <toRun name="blog" type="js.build_tools.npm" />
+    <toRun name="blog api" type="js.build_tools.npm" />
+    <toRun name="jonathan api" type="js.build_tools.npm" />
+    <toRun name="jonathanleivag" type="js.build_tools.npm" />
+    <method v="2" />
+  </configuration>
+</component>
