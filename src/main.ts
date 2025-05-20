@@ -31,6 +31,7 @@ async function bootstrap() {
     'https://jonathanleivag.cl',
     'http://localhost:3001',
     'http://localhost:4321',
+    'https://qa-blog.jonathanleivag.cl',
   ];
   app.use(
     cors({
