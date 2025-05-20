@@ -75,7 +75,6 @@ export class AuthService {
 
   async revalidateUser(payload: PayloadToken): Promise<AuthResponse> {
     const user = await this.userService.findOne(payload.id);
-
     const payloadToken: PayloadToken = {
       id: user._id,
       role: user.role,
