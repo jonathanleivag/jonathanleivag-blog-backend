@@ -7,7 +7,7 @@ Content-Type: application/json
 }
 
 ###
-POST {{url}}/auth/register
+POST {{url_qa}}/auth/register
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
