@@ -28,6 +28,7 @@ async function bootstrap() {
     'http://localhost:3000',
     'https://blog-jonathanleivag.vercel.app',
     'https://blog.jonathanleivag.cl',
+    'http://localhost:3001',
   ];
   app.use(
     cors({
