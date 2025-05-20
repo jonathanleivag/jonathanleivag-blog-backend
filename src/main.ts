@@ -26,9 +26,11 @@ async function bootstrap() {
   app.use(helmet());
   const allowedOrigins = [
     'http://localhost:3000',
+    'https://blog-jonathanleivag.vercel.app',
     'https://blog.jonathanleivag.cl',
-    'https://qa-blog.jonathanleivag.cl',
-    'https://blog-production-8350.up.railway.app',
+    'https://jonathanleivag.cl',
+    'http://localhost:3001',
+    'http://localhost:4321',
   ];
   app.use(
     cors({
