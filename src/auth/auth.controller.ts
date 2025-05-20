@@ -34,6 +34,7 @@ export class AuthController {
       secure: this.configService.get<string>('node.NODE_ENV') === 'production',
       sameSite: this.configService.get<string>('node.SAMESITE') as SAMESITE,
       maxAge: 1000 * 60 * 60 * 24 * 30,
+      domain: `.${this.configService.get<string>('uri.URI')}`,
     });
     return response;
   }
@@ -49,6 +50,7 @@ export class AuthController {
       secure: this.configService.get<string>('node.NODE_ENV') === 'production',
       sameSite: this.configService.get<string>('node.SAMESITE') as SAMESITE,
       maxAge: 1000 * 60 * 60 * 24 * 30,
+      domain: `.${this.configService.get<string>('uri.URI')}`,
     });
     return register;
   }
@@ -69,6 +71,7 @@ export class AuthController {
       secure: this.configService.get<string>('node.NODE_ENV') === 'production',
       sameSite: this.configService.get<string>('node.SAMESITE') as SAMESITE,
       maxAge: 1000 * 60 * 60 * 24 * 30,
+      domain: `.${this.configService.get<string>('uri.URI')}`,
     });
 
     return {
