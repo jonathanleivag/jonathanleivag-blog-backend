@@ -93,4 +93,9 @@ export class BlogController {
   ): Promise<BlogDocument> {
     return this.blogService.update(id, updateBlogDto, userId);
   }
+
+  @Patch('view/:slug')
+  sumViews(@Param('slug') slug: string) {
+    return this.blogService.sumViews(slug);
+  }
 }

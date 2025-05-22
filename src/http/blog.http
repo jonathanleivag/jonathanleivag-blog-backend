@@ -34,3 +34,11 @@ GET {{url}}/blog?category=Desarrollo%20Web
 ###
 GET {{url}}/blog/count/published
 Content-Type: application/json
+
+###
+GET {{url}}/blog/view/ssdsdsd
+Content-Type: application/json
+
+###
+PATCH {{url}}/blog/view/ssdsdsd
+Content-Type: application/json
