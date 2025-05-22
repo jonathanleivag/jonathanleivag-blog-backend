@@ -346,4 +346,12 @@ export class BlogService {
   async getAllBlog() {
     return this.blogModel.find({ published: true });
   }
+
+  async sumViews(slug: string) {
+    return this.blogModel.findOneAndUpdate(
+      { slug },
+      { $inc: { views: 1 } },
+      { new: true },
+    );
+  }
 }
